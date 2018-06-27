@@ -16,6 +16,8 @@ import scala.concurrent.Future
   */
 trait WorkflowTracker {
 
+  // TODO do we also need a hook to mark that an ID is in the midst of being processed?
+
   /**
     * Generate a stream of workflow IDs which are ready for reaping.
     *
