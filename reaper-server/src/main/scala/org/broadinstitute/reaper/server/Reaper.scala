@@ -1,5 +1,8 @@
 package org.broadinstitute.reaper.server
 
+/**
+  * Main entry point for the reaper.
+  */
 object Reaper {
 
   def main(args: Array[String]): Unit = {
