@@ -11,7 +11,7 @@ lazy val reaper = project
 /** Main code. */
 lazy val `reaper-server` = project
   .enablePlugins(ReaperDockerPlugin)
-  .settings(libraryDependencies ++= Dependencies.Server.MainDependencies)
+  .settings(libraryDependencies ++= Dependencies.Server.Dependencies)
 
 /**
   * Integration-test code.

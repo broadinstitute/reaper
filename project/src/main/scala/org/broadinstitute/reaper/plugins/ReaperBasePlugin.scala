@@ -92,12 +92,12 @@ object ReaperBasePlugin extends AutoPlugin {
     git.formattedShaVersion := Some(gitShaVersion.value),
     coverageHighlighting := false,
     scalafmtConfig := Some((baseDirectory in ThisBuild)(_ / ".scalafmt.conf").value),
-    scalafmtOnCompile := true
+    scalafmtOnCompile := true,
+    scalacOptions ++= compilerSettings
   )
 
   // Settings to apply at per-project scopes.
   override def projectSettings: Seq[Def.Setting[_]] = Seq(
-    scalacOptions ++= compilerSettings,
     scalacOptions in (Compile, doc) ++= docSettings,
     scalacOptions in (Compile, console) := consoleSettings,
     resourceGenerators in Compile += writeVersionConfig.taskValue,

@@ -17,15 +17,22 @@ object Dependencies {
   private val AkkaVersion = "2.5.13"
   private val AkkaHttpVersion = "10.1.3"
   private val BetterMonadicForVersion = "0.2.4"
+  private val ScalatestVersion = "3.0.5"
 
   object Server {
 
-    val MainDependencies: Seq[ModuleID] = Seq(
+    private val main = Seq(
       compilerPlugin("com.olegpy" %% "better-monadic-for" % BetterMonadicForVersion),
       "com.typesafe.akka" %% "akka-stream" % AkkaVersion,
       "com.typesafe.akka" %% "akka-http" % AkkaHttpVersion,
       "org.broadinstitute" %% "clio-client" % ClioVersion,
       "org.broadinstitute" %% "cromwell-api-client" % CromwellVersion
     )
+
+    private val test = Seq(
+      "org.scalatest" %% "scalatest" % ScalatestVersion
+    ).map(_ % Test)
+
+    val Dependencies: Seq[ModuleID] = main ++ test
   }
 }
