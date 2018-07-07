@@ -6,6 +6,14 @@ package org.broadinstitute.reaper.server
 object Reaper {
 
   def main(args: Array[String]): Unit = {
+
+    val configDescription = ReaperConfig
+      .load()
+      .fold(
+        failures => s"Failed to load config: $failures",
+        config => s"Loaded config: $config"
+      )
+
     println(
       s"""               ...
          |             ;::::;
@@ -28,7 +36,8 @@ object Reaper {
          | `:::::`::::::::::::;'`:;::#                O
          |  `:::::`::::::::;' /  / `:#
          |   ::::::`:::::;'  /  /   `#
-       """.stripMargin
+         |$configDescription
+         |""".stripMargin
     )
   }
 }
