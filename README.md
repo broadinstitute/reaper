@@ -4,33 +4,37 @@ Post-processor for Cromwell workflow outputs
 
 ## Getting Started
 
+### Install Mill
+
+http://www.lihaoyi.com/mill/#installation
+
 ### Build
 
-`sbt compile`
+`mill server.compile`
+
+### Generate Intellij .idea files
+
+`mill mill.scalalib.GenIdea/idea`
 
 ### Quickly run a server
 
-`sbt reaper-server/run`
+`mill server`
 
-### Build server docker image
+### Run the server while watching for source changes
 
-`sbt reaper-server/docker:publishLocal`
+`mill -w server`
 
-### Generate "staged" contents of docker image
+### Run the tests
 
-`sbt reaper-server/docker:stage`
-
-### Run the server docker image
-
-`docker run --rm -it broadinstitute/reaper-server:<version>`
-
-### Test that the code is consistently formatted
-
-`sbt scalafmtSbtCheck scalafmtCheck test:scalafmtCheck it:scalafmtCheck`
+`mill server.test`
 
 ### Format the code with scalafmt
 
-`sbt scalafmtSbt scalafmt test:scalafmt it:scalafmt`
+`mill server.reformat`
+
+## Format all the code with scalafmt
+
+`mill mill.scalalib.scalafmt.ScalafmtModule/reformatAll __.sources`
 
 ## More information
 

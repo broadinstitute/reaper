@@ -2,7 +2,6 @@ package org.broadinstitute.reaper.server.edge
 
 import akka.NotUsed
 import akka.stream.scaladsl.Source
-import cromwell.api.model.WorkflowId
 
 import scala.concurrent.Future
 
@@ -23,15 +22,15 @@ trait WorkflowTracker {
     *
     * Might be an infinite stream.
     */
-  def pullWorkflowIds(): Source[WorkflowId, NotUsed]
+  def pullWorkflowIds(): Source[String, NotUsed]
 
   /**
     * Mark that a workflow has been successfully reaped, and shouldn't be processed again.
     */
-  def markWorkflowReaped(id: WorkflowId): Future[Unit]
+  def markWorkflowReaped(id: String): Future[Unit]
 
   /**
     * Mark that reaping a workflow resulted in an error.
     */
-  def markWorkflowReapingFailed(id: WorkflowId, e: Throwable): Future[Unit]
+  def markWorkflowReapingFailed(id: String, e: Throwable): Future[Unit]
 }
