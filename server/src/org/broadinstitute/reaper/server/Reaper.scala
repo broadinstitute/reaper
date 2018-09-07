@@ -1,8 +1,6 @@
 package org.broadinstitute.reaper.server
 
-import pureconfig.error.ConfigReaderFailures
-
-object ReaperRoutes extends cask.Routes {
+class ReaperRoutes(config: ReaperConfig) extends cask.MainRoutes {
 
   val reaperArt: String = s"""               ...
                              |             ;::::;
@@ -39,7 +37,7 @@ object ReaperRoutes extends cask.Routes {
 
   @cask.get("/version")
   def version(): String = {
-    Reaper.config.version
+    config.version
   }
 
   initialize()
@@ -48,24 +46,20 @@ object ReaperRoutes extends cask.Routes {
 /**
   * Main entry point for the reaper.
   */
-object Reaper extends cask.Main(ReaperRoutes) {
-
-  val config: ReaperConfig = ReaperConfig
-    .load()
-    .fold(
-      failures => throw new RuntimeException(s"Could not load Reaper config: $failures"),
-      config => config
-    )
+object Reaper extends App {
 
   override def main(args: Array[String]): Unit = {
 
-    val configDescription: String = ReaperConfig
+    val config: ReaperConfig = ReaperConfig
       .load()
       .fold(
-        failures => s"Failed to load config: $failures",
-        config => s"Loaded config: $config"
+        failures =>
+          throw new RuntimeException(s"Could not load Reaper config: $failures"),
+        config => config
       )
 
-    super.main(args)
+    val mainRoutes = new ReaperRoutes(config)
+
+    mainRoutes.main(args)
   }
 }
