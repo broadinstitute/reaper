@@ -61,5 +61,6 @@ object Reaper extends App {
     val mainRoutes = new ReaperRoutes(config)
 
     mainRoutes.main(args)
+    println("Reaper has started.")
   }
 }
