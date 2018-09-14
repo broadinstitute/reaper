@@ -2,6 +2,8 @@ package org.broadinstitute.reaper.server
 
 class ReaperRoutes(config: ReaperConfig) extends cask.MainRoutes {
 
+  override def host: String = "0.0.0.0"
+
   val reaperArt: String = s"""               ...
                              |             ;::::;
                              |           ;::::; :;

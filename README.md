@@ -28,6 +28,10 @@ http://www.lihaoyi.com/mill/#installation
 
 `mill server.test`
 
+##Run the integration tests
+
+`mill intengration.test`
+
 ### Format the code with scalafmt
 
 `mill server.reformat`
