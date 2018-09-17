@@ -17,8 +17,8 @@ object ReaperContainer {
           .env("SCALA_VERSION", "2.12.6")
           .env("MILL_VERSION", "0.2.7")
           .workDir("/reaper")
-          .run("rm /bin/sh && ln -s /bin/bash /bin/sh")
-          .run("apt-get update && apt-get -y install curl")
+          .run("ln -sf /bin/bash /bin/sh")
+          .run("apt-get update && apt-get -y install curl git")
           .run("touch /usr/lib/jvm/java-8-openjdk-amd64/release")
           .run(
             s"""curl -fsL https://downloads.typesafe.com/scala/$$SCALA_VERSION/scala-$$SCALA_VERSION.tgz | tar xfz - -C /root/ && \\
@@ -34,6 +34,7 @@ object ReaperContainer {
           .add("reaper", "/reaper")
           .run("mill server.compile")
           .entryPoint("mill server.run")
+        println(builder.build())
       }),
     exposedPorts = Seq(8080),
     waitStrategy = Some(Wait.forHttp("/"))

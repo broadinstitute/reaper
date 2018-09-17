@@ -30,7 +30,7 @@ http://www.lihaoyi.com/mill/#installation
 
 ##Run the integration tests
 
-`mill intengration.test`
+`mill integration.test`
 
 ### Format the code with scalafmt
 

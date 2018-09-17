@@ -46,6 +46,14 @@ class IntegrationContainersTest
       config => config
     )
 
+  private val integrationConfig: IntegrationTestConfig = IntegrationTestConfig
+    .load()
+    .fold(
+      failures =>
+        throw new RuntimeException(s"Could not load integration test config: $failures"),
+      config => config
+    )
+
   /** URL of vault server to use when getting bearer tokens for service accounts. */
   private val vaultUrl = "https://clotho.broadinstitute.org:8200/"
 
@@ -87,7 +95,8 @@ class IntegrationContainersTest
   }
 
   private val reaperContainer = ReaperContainer.container
-  private val cromwellContainer = CromwellContainer.container
+  private val cromwellContainer =
+    CromwellContainer.container(integrationConfig.cromwellVersion)
   private val clioContainer: ClioDockerComposeContainer =
     ClioDockerComposeContainer.waitForReadyLog(File("/tmp"))
   private val postgresContainer = PostgreSQLContainer()
@@ -119,7 +128,7 @@ class IntegrationContainersTest
     // Will need some way to get this from build
     clioWebClient.getClioServerVersion.runWith(Sink.head).map { json =>
       json.as[VersionInfo] should be(
-        Right(VersionInfo("d695feea7a50c073bf3764fd329f20e9e49d515d"))
+        Right(VersionInfo("a5bf62570049176f3cc4c72e296a6d1964fa3562"))
       )
     }
   }
@@ -129,7 +138,6 @@ class IntegrationContainersTest
       s"http://${reaperContainer.containerIpAddress}:${reaperContainer.mappedPort(8080)}/version"
     )
     assert(response.statusCode == 200)
-    // Will need some way to get this from build
     assert(response.text == config.version)
   }
 
@@ -138,7 +146,9 @@ class IntegrationContainersTest
       s"http://${cromwellContainer.containerIpAddress}:${cromwellContainer.mappedPort(8000)}/engine/v1/version"
     )
     assert(response.statusCode == 200)
-    assert(response.text == "{\"cromwell\":\"34\"}")
+    assert(
+      response.text == s"""{\"cromwell\":\"${integrationConfig.cromwellVersion}\"}"""
+    )
   }
 
   override val container: Container = MultipleContainers(

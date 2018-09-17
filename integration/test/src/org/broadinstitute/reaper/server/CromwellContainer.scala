@@ -6,14 +6,14 @@ import org.testcontainers.images.builder.ImageFromDockerfile
 
 object CromwellContainer {
 
-  val container = new GenericContainer(
+  def container(cromwellVersion: String) = new GenericContainer(
     new ImageFromDockerfile("cromwell_1")
       .withDockerfileFromBuilder(builder => {
         builder
           .from("openjdk:8-slim")
-          .env("CROMWELL_VERSION", "34")
+          .env("CROMWELL_VERSION", cromwellVersion)
           .workDir("/cromwell")
-          .run("rm /bin/sh && ln -s /bin/bash /bin/sh")
+          .run("ln -sf /bin/bash /bin/sh")
           .run("apt-get update && apt-get -y install wget")
           .run(
             "wget https://github.com/broadinstitute/cromwell/releases/download/$CROMWELL_VERSION/cromwell-$CROMWELL_VERSION.jar"
