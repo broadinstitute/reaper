@@ -2,7 +2,6 @@ package org.broadinstitute.reaper.server.core
 
 import akka.NotUsed
 import akka.stream.scaladsl.Source
-import cromwell.api.model.{WorkflowId, WorkflowMetadata}
 import org.broadinstitute.clio.transfer.model.ClioIndex
 import org.broadinstitute.reaper.server.db.MetricsExtractor
 import org.broadinstitute.reaper.server.edge.WorkflowTracker
@@ -47,7 +46,7 @@ abstract class WorkflowReaper[CI <: ClioIndex](
   /** Build a stream which will process the outputs of a single Cromwell workflow. */
   private def reapWorkflow(
     metricsProcessor: MetricsExtractor[K, M]
-  )(id: WorkflowId): Source[WorkflowId, NotUsed] = {
+  )(id: String): Source[String, NotUsed] = {
     Source
       .fromFuture(getWorkflowMetadata(id))
       .map(extractClioInfo)
@@ -78,17 +77,17 @@ abstract class WorkflowReaper[CI <: ClioIndex](
   // TODO some of these will shake out to be Sources, not Futures.
 
   /** Get the metadata for a Cromwell workflow. */
-  protected def getWorkflowMetadata(id: WorkflowId): Future[WorkflowMetadata]
+  protected def getWorkflowMetadata(id: String): Future[String]
 
   /** Extract a Clio key-metadata pair from a blob of Cromwell metadata. */
-  protected def extractClioInfo(metadata: WorkflowMetadata): (K, M)
+  protected def extractClioInfo(metadata: String): (K, M)
 
   /** Check Clio for existing metadata associated with a key. */
   protected def getExistingClioMetadata(key: K): Future[Option[M]]
 
   // TODO we should make this a standard field on Clio metadata.
   /** Extract the Cromwell workflow ID stored within a blob of Clio metadata. */
-  protected def getWorkflowId(metadata: M): Option[WorkflowId]
+  protected def getWorkflowId(metadata: M): Option[String]
 
   // TODO improve the Clio MoveExecutor API to make it easier to use generically here.
   /**
@@ -99,5 +98,5 @@ abstract class WorkflowReaper[CI <: ClioIndex](
   protected def moveFiles(key: K, metadata: M): Future[Unit]
 
   /** Delete the execution directory of a Cromwell workflow. */
-  protected def cleanExecutionDirectory(id: WorkflowId): Future[Unit]
+  protected def cleanExecutionDirectory(id: String): Future[Unit]
 }
