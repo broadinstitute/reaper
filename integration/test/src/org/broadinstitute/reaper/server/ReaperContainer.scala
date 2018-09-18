@@ -34,7 +34,6 @@ object ReaperContainer {
           .add("reaper", "/reaper")
           .run("mill server.compile")
           .entryPoint("mill server.run")
-        println(builder.build())
       }),
     exposedPorts = Seq(8080),
     waitStrategy = Some(Wait.forHttp("/"))
