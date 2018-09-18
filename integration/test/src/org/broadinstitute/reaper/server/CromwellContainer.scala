@@ -16,7 +16,7 @@ object CromwellContainer {
           .run("ln -sf /bin/bash /bin/sh")
           .run("apt-get update && apt-get -y install wget")
           .run(
-            "wget https://github.com/broadinstitute/cromwell/releases/download/$CROMWELL_VERSION/cromwell-$CROMWELL_VERSION.jar"
+            "wget -q https://github.com/broadinstitute/cromwell/releases/download/$CROMWELL_VERSION/cromwell-$CROMWELL_VERSION.jar"
           )
           .entryPoint("java -jar cromwell-$CROMWELL_VERSION.jar server")
       }),
