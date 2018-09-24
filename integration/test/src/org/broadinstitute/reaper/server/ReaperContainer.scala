@@ -15,7 +15,7 @@ object ReaperContainer {
         builder
           .from("openjdk:8-slim")
           .env("SCALA_VERSION", "2.12.6")
-          .env("MILL_VERSION", "0.2.7")
+          .env("MILL_VERSION", "0.2.8")
           .workDir("/reaper")
           .run("ln -sf /bin/bash /bin/sh")
           .run("apt-get update && apt-get -y install curl git")
