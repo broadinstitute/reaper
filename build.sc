@@ -7,25 +7,26 @@ import mill.scalalib.scalafmt._
 
 import scala.sys.process._
 
-private val ClioRepo = "https://github.com:/broadinstitute/clio"
 private val ClioBranch = sys.env.getOrElse("CLIO_BRANCH", "develop")
+private val ClioRepo = "https://github.com:/broadinstitute/clio"
 private val ClioTestkitVersion = "a5bf62570049176f3cc4c72e296a6d1964fa3562"
 
 private val AkkaHttpVersion = "10.1.3"
 private val AkkaVersion = "2.5.14"
 private val BetterFilesVersion = "3.5.0"
 private val CaskVersion = "0.1.9"
+private val CirceVersion = "0.9.3"
+private val LogbackClassicVersion = "1.2.3"
+private val PostgresTestContainerVersion = "1.8.3"
 private val PostgresVersion = "42.2.5"
 private val PureConfigVersion = "0.9.1"
-private val TestContainersVersion = "0.20.0"
+private val RequestsVersion = "0.1.4"
 private val ScalatestVersion = "3.0.5"
 private val SlickVersion = "3.2.3"
-private val VaultJavaDriverVersion = "3.1.0"
-private val CirceVersion = "0.9.3"
-private val RequestsVersion = "0.1.4"
+private val TestContainersJavaVersion = "1.9.0"
+private val TestContainersVersion = "0.20.0"
 private val uJsonVersion = "0.6.6"
-private val PostgresTestContainerVersion = "1.8.3"
-private val LogbackClassicVersion = "1.2.3"
+private val VaultJavaDriverVersion = "3.1.0"
 
 trait GitModule extends Module {
   def gitHashForBranch(repo: String, branch: String) = T.command {
@@ -54,20 +55,20 @@ object server extends CommonScalaModule with ScalafmtModule with GitModule {
 
   override def ivyDeps = Agg(
     ivy"ch.qos.logback:logback-classic:$LogbackClassicVersion",
-    ivy"com.github.pureconfig::pureconfig::$PureConfigVersion",
-    ivy"com.lihaoyi::cask:$CaskVersion",
-    ivy"com.typesafe.akka::akka-stream::$AkkaVersion",
-    ivy"com.typesafe.akka::akka-http::$AkkaHttpVersion",
-    ivy"org.broadinstitute::clio-client::${clioHash()}",
-    ivy"com.typesafe.slick::slick::$SlickVersion",
-    ivy"com.typesafe.slick::slick-hikaricp::$SlickVersion",
-    ivy"org.postgresql:postgresql:$PostgresVersion",
     ivy"com.bettercloud:vault-java-driver:$VaultJavaDriverVersion",
     ivy"com.github.pathikrit::better-files::$BetterFilesVersion",
+    ivy"com.github.pureconfig::pureconfig::$PureConfigVersion",
+    ivy"com.lihaoyi::cask:$CaskVersion",
+    ivy"com.typesafe.akka::akka-http::$AkkaHttpVersion",
+    ivy"com.typesafe.akka::akka-stream::$AkkaVersion",
+    ivy"com.typesafe.slick::slick-hikaricp::$SlickVersion",
+    ivy"com.typesafe.slick::slick::$SlickVersion",
     ivy"io.circe::circe-core::$CirceVersion",
-    ivy"io.circe::circe-generic::$CirceVersion",
     ivy"io.circe::circe-generic-extras::$CirceVersion",
-    ivy"io.circe::circe-parser::$CirceVersion"
+    ivy"io.circe::circe-generic::$CirceVersion",
+    ivy"io.circe::circe-parser::$CirceVersion",
+    ivy"org.broadinstitute::clio-client::${clioHash()}",
+    ivy"org.postgresql:postgresql:$PostgresVersion"
   )
 
   object test extends Tests with CommonScalaTest with ScalafmtModule
@@ -81,11 +82,13 @@ object integration extends CommonScalaModule with ScalafmtModule {
   object test extends Tests with ScalafmtModule with CommonScalaTest {
     override def ivyDeps = super.ivyDeps() ++ Agg(
       ivy"com.dimafeng::testcontainers-scala::$TestContainersVersion",
-      ivy"org.testcontainers:postgresql:$PostgresTestContainerVersion",
-      ivy"org.broadinstitute::clio-integration-testkit::$ClioTestkitVersion",
+      ivy"com.lihaoyi::requests:$RequestsVersion",
+      ivy"com.lihaoyi::ujson:$uJsonVersion",
       ivy"com.typesafe.akka::akka-http-testkit:$AkkaHttpVersion",
       ivy"com.typesafe.akka::akka-stream-testkit::$AkkaVersion",
-      ivy"com.lihaoyi::requests:$RequestsVersion",
-      ivy"com.lihaoyi::ujson:$uJsonVersion")
+      ivy"org.broadinstitute::clio-integration-testkit::$ClioTestkitVersion",
+      ivy"org.testcontainers:postgresql:$PostgresTestContainerVersion",
+      ivy"org.testcontainers:testcontainers:$TestContainersJavaVersion"
+    )
   }
 }
